@@ -8,35 +8,42 @@ clc;
 %   Number of robots in a team
 numRobots=5;
 
-%   Discrete counter for the length of simulation
-simulationLength=100;
+%   Discrete counter for the length of simulation (larger number, longer simulation)
+simulationLength=50;
 
-%TODO [in version 3]
+
 %   Number of times the simulation is repeated under the same initial...
 %   and control conditions (for statistical analysis).
-%   numRuns=1;
+numRuns=3;
 
 %##########################################################################
 
 %   create robots with random initial ground truths...
 %   and specified sensor errors.
+
 for i=1:numRobots
-%   robot = createRobot( initialgroundTruth, initialPoseError, encoderError, sensorError, distanceBetweenWheels)
+    
+%   robot = createRobot( initialgroundTruth, initialPoseError, encoderError, sensorError, distanceBetweenWheels, robotID)
     rng('shuffle');
-    robots(i)= createRobot([5*randn,5*randn,normalizeAngle(5*rand)],[0.15,0.15,0.15],[0.02,0.02],[0.03,0.1],0.5);
+    robots(i)= createRobot([5*randn,5*randn,normalizeAngle(5*rand)],[0.15,0.15,0.15],[0.02,0.02],[0.03,0.1],0.5,i);
+    
 end
+
+%   create a copy of initialized robots for repeated simulations under...
+%   the same initial starting conditions an sensor noise
+robots_copy=robots;
 
 %##########################################################################
 
-%   randomly choose moving and stationary robots for each step
+%   randomly choose moving and stationary robots...
+%   at each step of the simulation
+
 for i=1:simulationLength
     
     %   randomly choose up to (numRobots-1) robots to move
     movingRobots{i}=randsample(numRobots,randsample(numRobots-1,1));
     
     %   generate control inputs for each of the moving robots
-    %   i is step
-    %   j is moving robot
     for j=1:length(movingRobots{i})
         ut{i,j}=abs(0.1*randn(10,2));
     end
@@ -48,28 +55,35 @@ end
 
 %##########################################################################
 
-%   TODO [simulate numRuns times uner the same initial and control conditions]
-%   collect data for ANEES calculations
-
 %   simulate numRuns times
-%for i=1:numRuns
+for i=1:numRuns
+    disp(['Run ',num2str(i), ' of ', num2str(numRuns)]);
+    
+    %   use a fresh copy of robots and subject them to the same motion...
+    %   sequences and control inputs
+    robots=robots_copy;
     
     %   for each step within a run
     for j=1:simulationLength
         
         %   select a robot to move
+        
         for k=1:length(movingRobots{j})
             
             movingRobot=movingRobots{j}(k);
             
             %   localize w.r.t first stationary robot.
+            
             stationaryRobot=stationaryRobots{j}(1);
+            
             robots(movingRobot)=localizeRobot(robots(movingRobot),robots(stationaryRobot), ut{j,k});
                         
-            %   localize the selected robot w.r.t the rest of stationary robots
+            %   localize the selected moving robot w.r.t the rest of stationary robots
+            
             for l=2:length(stationaryRobots{j})
                 
                 stationaryRobot=stationaryRobots{j}(l);
+                
                 robots(movingRobot)=localizeRobot(robots(movingRobot),robots(stationaryRobot),[0,0]);
                 
             end
@@ -78,69 +92,19 @@ end
         
         
     end
-
-%end
-
-    
-
- %##########################################################################
- 
- %  generate random colors for the graphs
- 
- for i=1:length(robots)
-     
-     randomColor(i,:)=[rand,rand,rand];   
- end
-
-% Ground Truths and EKF plots
-figure;
-set(gca,'fontsize',15);
-
-for i=1:length(robots)
-    
- 
-plot(robots(i).groundTruth(:,1),robots(i).groundTruth(:,2),'-o','color',randomColor(i,:));
-hold on;
-plot(robots(i).groundTruth(1,1),robots(i).groundTruth(1,2),'o','MarkerSize',12,'color',randomColor(i,:));
-hold on;
-text(robots(i).groundTruth(1,1),robots(i).groundTruth(1,2),['Robot ',num2str(i),' start'],'fontsize',12);
-hold on;
-
-plot(robots(i).mu(:,1),robots(i).mu(:,2),'--x','color',randomColor(i,:));
-hold on;
-
+    %   save the copies of robots for statistical analysis (evaluation of ANEES)
+    robotsNRuns(i,:)=robots;
 end
 
-title('Ground Truths (solid) and EKF Estimates (broken)');
-xlabel('x (m)');
-ylabel('y (m)');
 
-
-%##########################################################################
-
-% Ground Truths with Encoder only poses
-figure;
-set(gca,'fontsize',15);
-
+%   compute averages.
 for i=1:length(robots)
     
-plot(robots(i).groundTruth(:,1),robots(i).groundTruth(:,2),'-o','color',randomColor(i,:));
-hold on;
-plot(robots(i).groundTruth(1,1),robots(i).groundTruth(1,2),'o','MarkerSize',12,'color',randomColor(i,:));
-hold on;
-text(robots(i).groundTruth(1,1),robots(i).groundTruth(1,2),['Robot ',num2str(i),' start'],'fontsize',12);
-hold on;
-
-plot(robots(i).encoderPose(:,1),robots(i).encoderPose(:,2),'--x','color',randomColor(i,:));
-hold on;
-
+    robotsAverage(i)=computeAverages(robotsNRuns(:,i));
+    
 end
 
-title('Ground Truths (solid) and Encoder Estimates (broken)');
-xlabel('x (m)');
-ylabel('y (m)');
-
-%##########################################################################
-
+%   draw various graphs
+makePlots(robotsAverage);
 
 

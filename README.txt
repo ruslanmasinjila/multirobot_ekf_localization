@@ -1,7 +1,7 @@
 Multirobot Localization Using Extendend Kalman Filter.
 
 USAGE:      RunMe
-            >Change number of robots and simulation length 
+            >Change number of robots, simulation length and number of runs 
 
 CONCEPT:    A group of N robots with known but uncertain initial poses move randomly
             in an open, obstacle-free environment. As some of robots (one or more) move, 
@@ -23,4 +23,10 @@ CONCEPT:    A group of N robots with known but uncertain initial poses move rand
 STATUS:     February 4th 2017 [version1]
             > general case for multirobot localization involving N robots where N>=2
 
+            February 5th 2017 [version2]
+            > allows the simulation to be repeated numRuns times under the same initial 
+                conditions, control inputs, and sequence of movements.
+            > calculates and displays estimated results averaged over numRuns times.
 
+TODO:       > compute ANEES for numRuns simulations
+            > 

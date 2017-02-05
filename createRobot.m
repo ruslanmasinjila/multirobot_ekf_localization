@@ -1,10 +1,13 @@
 %   creates and initializes various robot parameters
 
-function robot = createRobot( initialGroundTruth, initialPoseError, encoderError, sensorError, distanceBetweenWheels )
+function robot = createRobot( initialGroundTruth, initialPoseError, encoderError, sensorError, distanceBetweenWheels, robotID )
 
 %   forces randn to produce different set of numbers...
 %   each time the randn is called
 rng('shuffle');
+
+%   give the robot its unique ID number
+robot.robotID=robotID;
 
 %   distance between the two wheels of the robot
 robot.b=distanceBetweenWheels;
