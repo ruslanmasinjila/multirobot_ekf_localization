@@ -28,5 +28,8 @@ STATUS:     February 4th 2017 [version1]
                 conditions, control inputs, and sequence of movements.
             > calculates and displays estimated results averaged over numRuns times.
 
-TODO:       > compute ANEES for numRuns simulations
-            > 
+            February 5th 2017 [version2.5]
+            > computes and displays ANEES averaged over numRuns
+
+TODO:       > display actual and estimated error ellipses around estimated robot poses
+            > display absolute error graphs (euclidean distances between actual and estimated poses)

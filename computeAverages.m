@@ -5,18 +5,22 @@ function robot = computeAverages( robotNRuns )
 
 numRuns=length(robotNRuns);
 
+%##########################################################################
 
-%   initialize partial sums to zero
+%   initialize partial sums for actual, estimated and encoder poses to zero
 groundTruthSum=zeros(size(robotNRuns(1).groundTruth));
 muSum=zeros(size(robotNRuns(1).mu));
 encoderPoseSum=zeros(size(robotNRuns(1).encoderPose));
+aneesSum=zeros(1,length(robotNRuns(1).groundTruth(:,1)));
+totalDistanceSum=0;
 
+%   initialize partial sums for covariance matrices to zero
 sigmaLength=length(robotNRuns(1).sigma);
 for i=1:sigmaLength
     sigmaSum{i}=zeros(3,3);
 end
 
-
+%##########################################################################
 
 %   add partial sums together
 for i=1:numRuns
@@ -24,17 +28,27 @@ for i=1:numRuns
     groundTruthSum=groundTruthSum+robotNRuns(i).groundTruth;
     muSum=muSum+robotNRuns(i).mu;
     encoderPoseSum=encoderPoseSum+robotNRuns(i).encoderPose;
+    totalDistanceSum=totalDistanceSum+robotNRuns(i).totalDistance;
+    
     
     for j=1:sigmaLength
+        
        sigmaSum{j}= sigmaSum{j}+robotNRuns(i).sigma{j};
+       aneesSum(j)=aneesSum(j)+...
+                    (robotNRuns(i).groundTruth(j,:)-robotNRuns(i).mu(j,:))*...
+                        (inv(robotNRuns(i).sigma{j}))*...
+                            (robotNRuns(i).groundTruth(j,:)-robotNRuns(i).mu(j,:))';                 
     end
 
 end
+%##########################################################################
 
 %   compute the means of partial sums
 robot.groundTruth=groundTruthSum/numRuns;
 robot.mu=muSum/numRuns;
 robot.encoderPose=encoderPoseSum/numRuns;
+robot.anees=(1/3).*(aneesSum/numRuns);
+robot.totalDistance=totalDistanceSum/numRuns;
 
 %   compute the actual error between estimated and actual poses...
 %   averaged over the number of simulation runs.
@@ -42,6 +56,9 @@ robot.actualError=abs(robot.groundTruth-robot.mu);
 
 for j=1:sigmaLength
     robot.sigma{j}= sigmaSum{j}/numRuns;
+
+%##########################################################################
+
 end
 
 

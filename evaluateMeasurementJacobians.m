@@ -1,4 +1,3 @@
-function [ Hr,Hl] = evaluateMeasurementJacobians( currentPose, landmarkPose)
 %   Computes the Jacobians Hr and Hl
 %   Hr:     Partial derivative of the Estimated Relative Pose w.r.t current pose
 %   Hl:     Partial derivetive of the Estimated Relative Pose w.r.t
@@ -13,8 +12,8 @@ function [ Hr,Hl] = evaluateMeasurementJacobians( currentPose, landmarkPose)
 %   Hr
 %   Hl
 
+function [ Hr,Hl] = evaluateMeasurementJacobians( currentPose, landmarkPose)
 
-%   BEGIN
 
     lx=landmarkPose(1);
     ly=landmarkPose(2);
@@ -37,6 +36,5 @@ function [ Hr,Hl] = evaluateMeasurementJacobians( currentPose, landmarkPose)
     Hl(2,3)=0;
     
        
-%   END
 
 end

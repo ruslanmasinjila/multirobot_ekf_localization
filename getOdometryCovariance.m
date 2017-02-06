@@ -1,4 +1,4 @@
-function [ Rt ] = getOdometryCovariance(ut,encoderError)
+function Rt = getOdometryCovariance(ut,encoderError)
 
 %   Returns the covariance matrix of the wheel odometers
 
@@ -14,7 +14,6 @@ function [ Rt ] = getOdometryCovariance(ut,encoderError)
 %   OUTPUT:
 %   Odometer Covariance Matrix: Rt
 
-%   BEGIN
 KL=encoderError(1);
 KR=encoderError(2);
 

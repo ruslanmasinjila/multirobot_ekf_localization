@@ -3,7 +3,7 @@
 clear all;
 close all;
 clc;
-
+%##########################################################################
 
 %   Number of robots in a team
 numRobots=5;
@@ -14,7 +14,7 @@ simulationLength=50;
 
 %   Number of times the simulation is repeated under the same initial...
 %   and control conditions (for statistical analysis).
-numRuns=3;
+numRuns=2;
 
 %##########################################################################
 
@@ -96,6 +96,7 @@ for i=1:numRuns
     robotsNRuns(i,:)=robots;
 end
 
+%##########################################################################
 
 %   compute averages.
 for i=1:length(robots)
@@ -104,7 +105,11 @@ for i=1:length(robots)
     
 end
 
+%   
+
+%##########################################################################
+
 %   draw various graphs
-makePlots(robotsAverage);
+makePlots(robotsAverage,numRuns);
 
 

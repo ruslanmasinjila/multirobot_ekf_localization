@@ -1,5 +1,3 @@
-function [ G_mut,G_ut] = evaluatePredictionJacobians(b,previousTheta,ut_measured)
-
 %   Computes the Jacobians G_mut and G_ut
 %   G_mut:  Partial derivative of the current pose w.r.t previous pose
 %   G_ut:   Partial derivetive of the current pose w.r.t measured control input
@@ -12,7 +10,9 @@ function [ G_mut,G_ut] = evaluatePredictionJacobians(b,previousTheta,ut_measured
 %   G_mut
 %   G_ut
 
-%   BEGIN
+function [ G_mut,G_ut] = evaluatePredictionJacobians(b,previousTheta,ut_measured)
+
+
 DL=ut_measured(1);
 DR=ut_measured(2);
 
@@ -32,7 +32,6 @@ G_ut(3,:)=[-2, 2];
 
 G_ut=(1/(2*b))*G_ut;
 
-%   END
 
 end
 
