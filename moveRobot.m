@@ -1,6 +1,6 @@
 %   1. calculates the moving robot's ground truth (zero encoder error) and
 %       estimated position (priori)
-%   2. propagates the uncertainty associated with robot's pose.
+%   2. propagates the uncertainty associated with robot's estimated (ekf) pose.
 
 function movingRobot = moveRobot(movingRobot,ut_actual)
 
@@ -22,6 +22,9 @@ mu_barTheta=movingRobot.mu(end,3);
 
 sigma_bar=movingRobot.sigma{end};
 
+%   get the distance traveled by the moving robot up to this point
+distanceTraveled=movingRobot.distanceTraveled(end);
+
 for i=1:length_control
     
 %   get the actual control input for the left and right wheel.
@@ -29,8 +32,7 @@ DL_actual=ut_actual(i,1);
 DR_actual=ut_actual(i,2);
 
 %   increment the total distance travelled
-movingRobot.totalDistance=movingRobot.totalDistance+(DL_actual+DR_actual)/2;
-
+distanceTraveled=distanceTraveled+(DL_actual+DR_actual)/2;
 %##########################################################################
 
 %   add some gaussian noise into the actual control input...
@@ -98,6 +100,7 @@ movingRobot.groundTruth(end+1,:)=[groundTruthX,groundTruthY,groundTruthTheta];
 movingRobot.encoderPose(end+1,:)=[encoderPoseX,encoderPoseY,encoderPoseTheta];
 movingRobot.mu_bar=[mu_barX,mu_barY,mu_barTheta];
 movingRobot.sigma_bar=sigma_bar;
+movingRobot.distanceTraveled(end+1)=distanceTraveled;
 
 
 

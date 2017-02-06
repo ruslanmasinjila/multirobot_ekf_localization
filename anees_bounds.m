@@ -1,4 +1,4 @@
-%   computer the lower and upper anees bounds
+%   computes the lower and upper anees bounds
 
 function [lower_bound,upper_bound] = anees_bounds(numRuns)
 

@@ -12,7 +12,7 @@ groundTruthSum=zeros(size(robotNRuns(1).groundTruth));
 muSum=zeros(size(robotNRuns(1).mu));
 encoderPoseSum=zeros(size(robotNRuns(1).encoderPose));
 aneesSum=zeros(1,length(robotNRuns(1).groundTruth(:,1)));
-totalDistanceSum=0;
+distanceTraveledSum=zeros(1,length(robotNRuns(1).distanceTraveled));
 
 %   initialize partial sums for covariance matrices to zero
 sigmaLength=length(robotNRuns(1).sigma);
@@ -28,7 +28,7 @@ for i=1:numRuns
     groundTruthSum=groundTruthSum+robotNRuns(i).groundTruth;
     muSum=muSum+robotNRuns(i).mu;
     encoderPoseSum=encoderPoseSum+robotNRuns(i).encoderPose;
-    totalDistanceSum=totalDistanceSum+robotNRuns(i).totalDistance;
+    distanceTraveledSum=distanceTraveledSum+robotNRuns(i).distanceTraveled;
     
     
     for j=1:sigmaLength
@@ -48,7 +48,7 @@ robot.groundTruth=groundTruthSum/numRuns;
 robot.mu=muSum/numRuns;
 robot.encoderPose=encoderPoseSum/numRuns;
 robot.anees=(1/3).*(aneesSum/numRuns);
-robot.totalDistance=totalDistanceSum/numRuns;
+robot.distanceTraveled=distanceTraveledSum/numRuns;
 
 %   compute the actual error between estimated and actual poses...
 %   averaged over the number of simulation runs.
@@ -56,6 +56,12 @@ robot.actualError=abs(robot.groundTruth-robot.mu);
 
 for j=1:sigmaLength
     robot.sigma{j}= sigmaSum{j}/numRuns;
+    
+%   determine optimistic, pessimistic, and optimal ANEES values
+[lower_bound,upper_bound] = anees_bounds(numRuns);
+robot.optimistic_anees=find(robot.anees>upper_bound);
+robot.pessimistic_anees=find(robot.anees<lower_bound);
+robot.valid_anees=find(robot.anees>=lower_bound&robot.anees<=upper_bound);
 
 %##########################################################################
 

@@ -1,5 +1,3 @@
-function [ Qt ] = getSensorCovariance(S)
-
 %   Returns the covariance matrix of the Distance Sensor
 
 %   INPUT:
@@ -10,14 +8,11 @@ function [ Qt ] = getSensorCovariance(S)
 %   OUTPUT:
 %   Qt
 
-%   BEGIN
+function [ Qt ] = getSensorCovariance(S)
 
 sigma_rho=S(1);
 sigma_phi=S(2);
 
 Qt=[(sigma_rho)^2 0;0 (sigma_phi)^2];
-
-%   END
-
 
 end

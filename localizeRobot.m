@@ -1,5 +1,5 @@
 %   localizes a moving robot using EKF algorithm...
-%   stationary robots act as landmarks to moving robot
+%   stationary robots act as landmarks to moving robots
 
 function movingRobot = localizeRobot( movingRobot, stationaryRobot, ut_actual )
 

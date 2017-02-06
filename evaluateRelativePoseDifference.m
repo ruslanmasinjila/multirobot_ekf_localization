@@ -10,8 +10,6 @@
 
 function Z_diff =evaluateRelativePoseDifference(Z,Z_bar)
 
-
-
 Z_diff=Z-Z_bar;
 
 %   Normalize the difference to [-pi,pi]

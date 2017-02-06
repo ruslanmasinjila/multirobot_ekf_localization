@@ -6,9 +6,6 @@ function robot = createRobot( initialGroundTruth, initialPoseError, encoderError
 %   each time the randn is called
 rng('shuffle');
 
-%   give the robot its unique ID number
-robot.robotID=robotID;
-
 %   distance between the two wheels of the robot
 robot.b=distanceBetweenWheels;
 
@@ -22,8 +19,8 @@ robot.sigma_phi=sensorError(2);
 robot.KL=encoderError(1);
 robot.KR=encoderError(2);
 
-%   total (actual) distance travelled by robot
-robot.totalDistance=0;
+%   distance travelled by the robot
+robot.distanceTraveled(1)=0;
 
 %   initial ground truth of the robot
 robot.groundTruth(1,:)=initialGroundTruth;

@@ -15,21 +15,22 @@ CONCEPT:    A group of N robots with known but uncertain initial poses move rand
             For each robot, the following assumptions and models were made:
 
             motion model: unicycle (2-wheeled robot).
-            measurement model: relative distance (rho) and relative angle (phi)
+            measurement model: relative distance (rho) and relative angle (phi).
             encoder noise: gaussian and linearly proportional to the distance moved by the wheels.
-            range sensor noise: gaussian in rho and phi
+            range sensor noise: gaussian in rho and phi.
 
 
 STATUS:     February 4th 2017 [version1]
-            > general case for multirobot localization involving N robots where N>=2
+            > general case for multirobot localization involving N robots where N>=2.
 
             February 5th 2017 [version2]
             > allows the simulation to be repeated numRuns times under the same initial 
                 conditions, control inputs, and sequence of movements.
             > calculates and displays estimated results averaged over numRuns times.
+            > computes and displays ANEES averaged over numRuns.
 
-            February 5th 2017 [version2.5]
-            > computes and displays ANEES averaged over numRuns
+            February 6th 2017 [version3]
+            > computes and display absolute errors in X and Y coordinates of all robots.
 
-TODO:       > display actual and estimated error ellipses around estimated robot poses
-            > display absolute error graphs (euclidean distances between actual and estimated poses)
+TODO:       > display actual and estimated 2D error ellipses around estimated robot poses.
+            > add covariance inflation index for tuning the ekf algorithm.

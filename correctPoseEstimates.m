@@ -1,3 +1,5 @@
+%   refines the pose estimated poses using relative measurements.
+
 function movingRobot=correctPoseEstimates(movingRobot,stationaryRobot)
 
 %##########################################################################

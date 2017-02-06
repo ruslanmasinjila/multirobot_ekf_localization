@@ -1,3 +1,5 @@
+%   estimates the relative distance and orientation between...
+%   moving robot, and stationary robot that acts as a landmark
 function movingRobot = estimateRelativePose(movingRobot,stationaryRobot)
 
 %######################### MEASURED DISTANCES AND ANGLES ##################

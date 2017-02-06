@@ -14,7 +14,7 @@ simulationLength=50;
 
 %   Number of times the simulation is repeated under the same initial...
 %   and control conditions (for statistical analysis).
-numRuns=2;
+numRuns=1;
 
 %##########################################################################
 
@@ -23,9 +23,9 @@ numRuns=2;
 
 for i=1:numRobots
     
-%   robot = createRobot( initialgroundTruth, initialPoseError, encoderError, sensorError, distanceBetweenWheels, robotID)
+%   robot = createRobot( initialgroundTruth, initialPoseError, encoderError, sensorError, distanceBetweenWheels)
     rng('shuffle');
-    robots(i)= createRobot([5*randn,5*randn,normalizeAngle(5*rand)],[0.15,0.15,0.15],[0.02,0.02],[0.03,0.1],0.5,i);
+    robots(i)= createRobot([5*randn,5*randn,normalizeAngle(5*randn)],[0.15,0.15,0.15],[0.02,0.02],[0.1,0.1],0.5);
     
 end
 
@@ -72,7 +72,7 @@ for i=1:numRuns
             
             movingRobot=movingRobots{j}(k);
             
-            %   localize w.r.t first stationary robot.
+            %   localize the selected moving w.r.t first stationary robot.
             
             stationaryRobot=stationaryRobots{j}(1);
             
@@ -105,11 +105,31 @@ for i=1:length(robots)
     
 end
 
-%   
-
 %##########################################################################
 
 %   draw various graphs
 makePlots(robotsAverage,numRuns);
+
+%##########################################################################
+
+
+%   Display ANEES percentages
+for i=1:length(robotsAverage)
+
+pessimistic_anees=(length(robotsAverage(i).pessimistic_anees)/length(robotsAverage(i).anees))*100;
+optimistic_anees=(length(robotsAverage(i).optimistic_anees)/length(robotsAverage(i).anees))*100;
+valid_anees=(length(robotsAverage(i).valid_anees)/length(robotsAverage(i).anees))*100;
+
+disp('*******************************');
+disp(['ANEES FOR ROBOT ',num2str(i)]);
+disp(['Pessimistic ANEES: ',num2str(pessimistic_anees),'%']);
+disp(['Optimistic ANEES ',num2str(optimistic_anees),'%']);
+disp(['Valid ANEES ',num2str(valid_anees),'%']);
+
+end
+
+
+
+
 
 
